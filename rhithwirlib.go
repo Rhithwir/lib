@@ -22,7 +22,8 @@ func QuadsToLinear(frame []int) (out []int) {
 func DrivePuckLoc(target vector.Vector) {
 	data := GetHallEffect(0)
 	puck := PuckLocation(data)
-	err := puck.Sub(target).Normalize()
+	err := puck.Sub(target)
+	err.Normalize()
 	//phase :=
 	for sel := 0; sel < 8; sel++ { // yu yd xl xr yu yd xl xr
 		// yu and yd both pwm.Y
@@ -49,7 +50,7 @@ func GetHallEffect(board uint) (data []int) {
 // i have no idea if this will work at all
 func locToPhase(in vector.Vector) (out vector.Vector) {
 	phaseLength := 0.5 // whats the real value? is each phase 1 inch? half a inch? more? less? if one iteration of all phases is X inches then each phase is X/4 inches
-	out.X, out.Y = float64(imod(in.X, int(phaseLength*4))), float64(imod(in.Y, int(phaseLength*4)))
+	out.X, out.Y = float64(imod(int(in.X), int(phaseLength*4))), float64(imod(int(in.Y), int(phaseLength*4)))
 	return
 }
 
