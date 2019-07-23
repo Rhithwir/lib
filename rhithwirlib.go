@@ -10,7 +10,7 @@ import (
 )
 
 // QuadsToLinear converts a quad-formatted frame to a linear-formatted frame
-func QuadsToLinear(frame [64]int) (out []int) {
+func QuadsToLinear(frame []int) (out []int) {
 	for i := 0; i < len(frame); i++ {
 		ni := (4 * int(i/8)) + (imod(i, 4) + int(imod(i/4, 2))*16) + (16 * int(i/32)) // <- result of too much caffeine
 		out = append(out, frame[ni])
@@ -35,11 +35,11 @@ func DrivePuckLoc(target vector.Vector) {
 }
 
 // GetHallEffect returns a hall effect grid for a board
-func GetHallEffect(board uint) (data [64]int) {
+func GetHallEffect(board uint) (data []int) {
 	for quad := 0; quad < 4; quad++ {
 		for anadr := 0; anadr < 16; anadr++ {
 			v := Read(board, uint(quad), uint(anadr))
-			data[i] = v
+			data = append(data, v)
 		}
 	}
 	data = QuadsToLinear(data) // will this work?
@@ -49,7 +49,7 @@ func GetHallEffect(board uint) (data [64]int) {
 // i have no idea if this will work at all
 func locToPhase(in vector.Vector) (out vector.Vector) {
 	phaseLength := 0.5 // whats the real value? is each phase 1 inch? half a inch? more? less? if one iteration of all phases is X inches then each phase is X/4 inches
-	out.X, out.Y = imod(in.X, phaseLength*4), imod(in.Y, phaseLength*4)
+	out.X, out.Y = float64(imod(in.X, int(phaseLength*4))), float64(imod(in.Y, int(phaseLength*4)))
 	return
 }
 
